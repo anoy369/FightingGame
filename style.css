@@ -6,17 +6,34 @@ main{
     background: #000;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     padding: 20px;
 }
 .playerHealth, .enemyHealth{
     background: yellow;
-    width: 80%;
+    position: relative;
+    width: 100%;
     height: 30px;
 }
 
-.Timer{
+.enemyHealth{
+    display: flex;
+    justify-content: flex-end;
+}
+
+#playerHealth, #enemyHealth{
+    background: blue;
+    width: 100%;
+    height: 30px;
+}
+
+
+.timer{
     background-color: red;
-    width: 20%;
+    width: 100px;
     height: 100px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

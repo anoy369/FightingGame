@@ -20,11 +20,12 @@ class Sprite {
                 x: this.position.x,
                 y: this.position.y
             },
-            offset,
+            offset, 
             width: 100,
             height: 50
         }
         this.isAttacking
+        this.health = 100
     }
 
     draw() {
@@ -45,7 +46,7 @@ class Sprite {
 
     update() {
         this.draw()
-        this.attackBox.position.x = this.position.x
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x
         this.attackBox.position.y = this.position.y
         
         this.position.x += this.velocity.x
@@ -119,6 +120,15 @@ function rectangularCollision({rectangle1, rectangle2}) {
     )
 }
 
+let timer = 10
+function decreaseTimer() {
+    if (timer > 0) {
+        setTimeout(decreaseTimer, 1000)
+        timer--
+        document.querySelector('#timer').innerHTML = timer
+    }
+}
+
 function animate() {
     window.requestAnimationFrame(animate)
     c.fillStyle = 'black'
@@ -151,7 +161,8 @@ function animate() {
         player.isAttacking
     ) {
         player.isAttacking = false
-        console.log('attack')
+        enemy.health -= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health + '%'
     }
 
     //detect for collusion for enemy
@@ -163,7 +174,8 @@ function animate() {
         enemy.isAttacking
     ) {
         enemy.isAttacking = false
-        console.log('Eattack')
+        enemy.health -= 20
+        document.querySelector('#playerHealth').style.width = enemy.health + '%'
     }
 }
 
