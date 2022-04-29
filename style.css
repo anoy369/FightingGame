@@ -1,0 +1,22 @@
+main{
+    display: inline-block;
+}
+
+.healthBar{
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.playerHealth, .enemyHealth{
+    background: yellow;
+    width: 80%;
+    height: 30px;
+}
+
+.Timer{
+    background-color: red;
+    width: 20%;
+    height: 100px;
+}
