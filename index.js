@@ -68,6 +68,14 @@ const player = new Fighter({
             imageSrc: './assets/player1/Attack1.png',
             framesMax: 6,
         }
+    },
+    attackBox: {
+        offset: {
+            x: 0,
+            y: 50
+        },
+        width: 270,
+        height: 50
     }
 })
 
@@ -84,6 +92,43 @@ const enemy = new Fighter({
     offset: {
         x: -50,
         y: 0
+    },
+    imageSrc: './assets/player2/idle.png',
+    scale: 3,
+    framesMax: 4,
+    offset: {
+        x: 300,
+        y: 220
+    },
+    sprites: {
+        idle: {
+            imageSrc: './assets/player2/idle.png',
+            framesMax: 4
+        },
+        run: {
+            imageSrc: './assets/player2/Run.png',
+            framesMax: 8,
+        },
+        jump: {
+            imageSrc: './assets/player2/Jump.png',
+            framesMax: 2,
+        },
+        fall: {
+            imageSrc: './assets/player2/Fall.png',
+            framesMax: 2,
+        },
+        attack1: {
+            imageSrc: './assets/player2/Attack1.png',
+            framesMax: 4,
+        }
+    },
+    attackBox: {
+        offset: {
+            x: -270,
+            y: 50
+        },
+        width: 270,
+        height: 50
     }
 })
 
@@ -111,7 +156,7 @@ function animate() {
     background.update()
     shop.update()
     player.update()
-    // enemy.update()
+    enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
@@ -132,9 +177,17 @@ function animate() {
     }
 // Enemy Movement
     if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5
+        enemy.velocity.x = -5        
+        enemy.switchSprite('run')
     } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
         enemy.velocity.x = 5
+        enemy.switchSprite('run')
+    }else if (enemy.velocity.y < 0) {
+        enemy.switchSprite('jump')
+    } else if (enemy.velocity.y > 0) {
+        enemy.switchSprite('fall')
+    } else {
+        enemy.switchSprite('idle')
     }
 
     //detect for collusion for player
@@ -143,11 +196,17 @@ function animate() {
             rectangle1: player,
             rectangle2: enemy
         }) &&
-        player.isAttacking
+        player.isAttacking && player.framesCurrent === 4
     ) {
         player.isAttacking = false
         enemy.health -= 20
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
+    }
+
+    // missed attack
+
+    if(player.isAttacking && player.framesCurrent === 4 ){
+        player.isAttacking = false
     }
 
     //detect for collusion for enemy
@@ -155,12 +214,18 @@ function animate() {
         rectangularCollision({
             rectangle1: enemy,
             rectangle2: player
-        }) &&
-        enemy.isAttacking
+        }) && 
+        enemy.isAttacking && enemy.framesCurrent === 2
     ) {
         enemy.isAttacking = false
         player.health -= 20
         document.querySelector('#playerHealth').style.width = player.health + '%'
+    }
+
+    // missed attack
+
+     if(enemy.isAttacking && enemy.framesCurrent === 2 ){
+        enemy.isAttacking = false
     }
 
     // end game based on health
@@ -202,7 +267,7 @@ window.addEventListener('keydown', (event) => {
             enemy.velocity.y = -20
         break
         case 'ArrowDown':
-            enemy.isAttacking = true
+            enemy.attack()
         break
     }
 })
